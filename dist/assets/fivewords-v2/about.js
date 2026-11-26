@@ -7,9 +7,8 @@ export function createAbout(React, useDeployment, launchUrl, uniswapLink) {
     const imd = manifest.network.pairToken?.address;
     return h("div", { className: "page prose" },
       h("h1", null, "about"),
-      h("p", null, "a mini experiment in multiplayer ai."),
       h("p", null,
-        "five strangers write one image prompt, one word each. when the fifth word lands, the contract orders the image from the ",
+        "a mini experiment in multiplayer ai. five strangers write one image prompt, one word each. when the fifth word lands, the contract orders the image from the ",
         link("https://imd.fun", "imd swarm"),
         " in the same transaction. the next image opens five hours later. after five images it ends: 25 nfts, one per word.",
       ),

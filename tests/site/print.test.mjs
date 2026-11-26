@@ -39,6 +39,7 @@ test("gateway URL uses the delivery CID and the sibling print path", () => {
   const url = "https://imd-ipfs.xyz/ipfs/bafybeigmq6qhme4m27uvg5n5fque46p3yba7bicszaynpapaytuqaylqae/artifacts/print.png";
   assert.equal(gatewayPrint(image), url);
   assert.equal(gatewayPrint({ imageURI: image.uri.replace("result.json", "artifacts/print.png") }), url);
+  assert.equal(gatewayPrint({ uri: image.uri.replace("ipfs://", "https://ipfs.io/ipfs/") }), url);
   assert.equal(gatewayPrint({ uri: "https://api.imd.fun/intake-results/example" }), null);
 });
 

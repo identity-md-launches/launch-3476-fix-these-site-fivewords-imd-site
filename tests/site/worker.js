@@ -52,8 +52,10 @@ async function answer(event) {
     const path = url.pathname.slice(app.pathname.length);
     const response = await fetch(new URL(path || "index.html", dist));
     if (path) return new Response(response.body, { headers: response.headers, status: response.status });
-    // Replay the between-rounds chain snapshot with its matching wall clock on all three routes.
-    const clock = Number(BigInt(data.timestamps[data.block])) * 1000;
+    const now = url.searchParams.get("round") === "2"
+      ? Number(data.fifthWord.blockTimestamp) + 5 * 3600
+      : Number(data.timestamps[data.block]);
+    const clock = now * 1000;
     const html = (await response.text()).replace("<head>", `<head><script>Date.now = () => ${clock} + Math.floor(performance.now())</script>`);
     return new Response(html, { headers: { ...headers, "Content-Type": "text/html" } });
   }
@@ -72,16 +74,24 @@ async function answer(event) {
   log.push(request.url);
   if (request.url === gateway) {
     if (mode === "gateway" || (mode === "recover" && log.filter((entry) => entry === gateway).length > 1)) return png();
+    if (mode !== "recover") return new Response("forbidden", { status: 403, headers });
     return new Response("<html>unavailable</html>", { headers: { ...headers, "Content-Type": "text/html" } });
   }
   if (request.url === `https://api.imd.fun/intake/1/${data.fifthWord.transactionHash}`) {
+    if (mode === "intake-recover" && log.filter((entry) => entry === request.url).length === 1) {
+      return new Response("unavailable", { status: 503, headers });
+    }
     return json({ entries: [{ admission: { result: { jobId: job } } }] });
   }
   if (request.url === `https://api.imd.fun/jobs/${job}/result`) {
     return json({ files: [{ name: "preview", url: "https://example.org/preview" }, { name: "print", url: file }] });
   }
-  if (request.url === file && mode === "api") return png();
+  if (request.url === file && (mode === "api" || mode === "intake-recover")) return png();
   return new Response("unavailable", { status: 403, headers });
 }
 
-self.addEventListener("fetch", (event) => event.respondWith(answer(event)));
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  if (url.origin === app.origin && !url.href.startsWith(app.href)) return;
+  event.respondWith(answer(event));
+});

@@ -19,10 +19,10 @@ async function until(probe, label) {
   throw new Error(`timed out waiting for ${label}. Page text: ${doc()?.body?.innerText}`);
 }
 let run;
-async function openApp(mode, route) {
+async function openApp(mode, route, round = 1) {
   run = crypto.randomUUID();
   const loaded = new Promise((resolve) => frame.addEventListener("load", resolve, { once: true }));
-  frame.src = `./app/?mode=${mode}&run=${run}${route}`;
+  frame.src = `./app/?mode=${mode}&round=${round}&run=${run}${route}`;
   await loaded;
 }
 function imageIs(url) {
@@ -40,8 +40,10 @@ async function history() {
 }
 function passed(text) { results.textContent += `PASS ${text}\n`; }
 
+let registration;
+let status = "failed";
 try {
-  await navigator.serviceWorker.register("./worker.js");
+  registration = await navigator.serviceWorker.register("./worker.js");
   await navigator.serviceWorker.ready;
   await until(() => navigator.serviceWorker.controller, "offline browser fixtures");
   results.textContent = "";
@@ -58,6 +60,15 @@ try {
     }
   }
 
+  await openApp("api", "", 2);
+  await until(() => imageIs(print), "image 1 after round 2 opens");
+  check(doc().querySelector("#panel-title").textContent === "image 2 of 5", "round 2 panel");
+  check(!doc().querySelector("#word").disabled, "round 2 word entry");
+  check(doc().querySelector(".stage .frame .sentence .blank"), "active round sentence");
+  check(doc().querySelector(".frame-img").closest("a")?.hash === "#/image/1", "image 1 link");
+  check(doc().querySelectorAll(".frame-img").length === 1, "duplicate print");
+  passed("image 1 stays visible below the open round on the home page");
+
   for (const refresh of ["page reload", "game refresh"]) {
     await openApp("recover", "#/image/1");
     await until(() => doc()?.querySelector(".frame .caption")?.textContent.includes("image unavailable"), "both sources failed");
@@ -69,13 +80,22 @@ try {
     passed(`sentence preserved and gateway retried on ${refresh}`);
   }
 
+  await openApp("intake-recover", "#/gallery");
+  const tile = () => doc()?.querySelector('.tile[href="#/image/1"]');
+  await until(() => tile()?.querySelector(".caption")?.textContent.includes("image unavailable"), "intake failure");
+  check([...tile().querySelectorAll(".w")].map((el) => el.textContent).join(" ") === sentence, "gallery lost sentence");
+  frame.contentWindow.location.reload();
+  await until(() => imageIs(print), "gallery recovery through the API");
+  check(JSON.stringify(await history()) === JSON.stringify([gateway, intake, gateway, intake, result, print]), "intake retry order");
+  passed("gallery retains the sentence and recovers through the API on reload");
+
   await openApp("gateway", "#/about");
   await until(() => doc()?.querySelector(".prose h2"), "About");
   const text = (node) => node?.textContent;
   const launch = doc().querySelector('a[href="https://explorer.imd.fun/launch"]');
   check(text(launch) === "what will you build?", "launch link text");
   check(launch.previousSibling?.nodeType === Node.TEXT_NODE && text(launch.previousSibling) === "this is just a tiny five word example. ", "plain first sentence");
-  check(text(doc().querySelector('.prose p a[href="https://imd.fun"]')) === "imd swarm", "imd swarm link");
+  check(text(doc().querySelector('.prose p:first-of-type a[href="https://imd.fun"]')) === "imd swarm", "first paragraph imd swarm link");
   const token = "0xd34a99bc0f67ae1bbd63c660e6d0b0dd03e263b7";
   const tokenLink = doc().querySelector(`.prose p a[href="https://etherscan.io/token/${token}"]`);
   check(text(tokenLink) === token && text(tokenLink.parentElement.previousElementSibling.previousElementSibling) === "where to get imd", "token link");
@@ -84,8 +104,10 @@ try {
   check(text(last) === "built by a distributed swarm of agents (imd). see the prompt and job breakdown.", "last paragraph");
   check(text(last.querySelector('a[href="https://explorer.imd.fun/jobs/96f8cefc-d381-4b39-98c6-2a8ab3913f52"]')) === "prompt and job breakdown", "job link");
   passed("About copy and link boundaries");
-  results.dataset.status = "passed";
+  status = "passed";
 } catch (error) {
   results.textContent += `FAIL ${error.stack || error}\n`;
-  results.dataset.status = "failed";
+} finally {
+  await registration?.unregister();
+  results.dataset.status = status;
 }

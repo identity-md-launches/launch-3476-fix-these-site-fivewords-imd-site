@@ -4,7 +4,8 @@ const api = "https://api.imd.fun";
 
 export function gatewayPrint(image) {
   for (const uri of [image.imageURI, image.uri]) {
-    const match = /^ipfs:\/\/([a-zA-Z0-9]+)(?:\/|$)/.exec(uri);
+    // A delivery can identify the same directory by an IPFS URI or a gateway path.
+    const match = /^(?:ipfs:\/\/|https?:\/\/[^/?#]+\/ipfs\/)([a-zA-Z0-9]+)(?:[/?#]|$)/.exec(uri);
     if (match) return `https://imd-ipfs.xyz/ipfs/${match[1]}/artifacts/print.png`;
   }
   return null;
