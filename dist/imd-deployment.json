@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "launchId": "a9881956-4bea-4ae1-885e-94a534f54cdf",
+  "chainId": 1,
+  "sourceCommit": "29c4264743a89978beb3af53dc78fcded3ffe804",
+  "attestationHash": "86aa712e66b7c57396b8015702caf265b60238d7edef5c01ea3be0c0d4b968a4",
+  "contracts": [
+    {
+      "name": "FiveWords",
+      "address": "0x241cc9f4525d6184b29e0bbc9f8af015dcaa4ea2",
+      "abiHash": "39546ba2fddb8a2970d587fa0d2162165ea432d32b32c5a14da3478e834e6cda",
+      "abiPath": "abi/FiveWords.json"
+    }
+  ],
+  "assets": [
+    {
+      "path": "abi/FiveWords.json",
+      "sha256": "3c670bc37d9c7b7cc243832328e9de5a1b9dea7aae0e145e328d73ac434b4a1c"
+    },
+    {
+      "path": "assets/fivewords-v2/about.js",
+      "sha256": "d4b0934dff5a3c604d481dcf285e4a4c91fc0f89c548fce65887d376f7f2343e"
+    },
+    {
+      "path": "assets/fivewords-v2/app.js",
+      "sha256": "9a49fc3e1a94f07b587ae6006bdeb451779911c5aa2db60532c044c03f27b0cc"
+    },
+    {
+      "path": "assets/fivewords-v2/ccip-Bw0R0WzF.js",
+      "sha256": "b85a13c0c4ed7c6966b2fbe13f55c7d31037cd7ee55ce8e502c28433d674369b"
+    },
+    {
+      "path": "assets/fivewords-v2/dist-CLdtm5H_.js",
+      "sha256": "ea16d699d81957923c7c4453daad4ee7f486d4f0a1ba743ac868505de0227221"
+    },
+    {
+      "path": "assets/fivewords-v2/frame.js",
+      "sha256": "39662ee2e06056891ec84dc79146b49e851ba90756350d3024f3dad6a89d1a81"
+    },
+    {
+      "path": "assets/fivewords-v2/hooks.module-DE9oX6xH.js",
+      "sha256": "18290b66f5736ddfcd375526f88fd55c2ecf072d6feee11d3554a78df4a3594f"
+    },
+    {
+      "path": "assets/fivewords-v2/index-BALOSWLC.js",
+      "sha256": "b00462dd3cb1bd70aaa686e52d653b54d58179cda2d26f2b92783918c5210e1f"
+    },
+    {
+      "path": "assets/fivewords-v2/print.js",
+      "sha256": "526dc507c03c91c0b528c92082c1ccca33ffe730e2f188deacc98c989448dedf"
+    },
+    {
+      "path": "assets/index-BeUniFi_.css",
+      "sha256": "cae661fb8263daa5150aaf8a0b792c8f313b2fab2c1bb9512ea45a14dccff5a2"
+    },
+    {
+      "path": "favicon.svg",
+      "sha256": "b70b5faecc0ecde84d7cf71c276cfaeb1784f5de1d65781d563a9d9865cb1e02"
+    },
+    {
+      "path": "index.html",
+      "sha256": "afdc07d55b6613d4552a9357898a01b235e05ca05eb7a0cb5227bb145d498abe"
+    },
+    {
+      "path": "og.png",
+      "sha256": "a1c2429032b290766dca8ce65da499849d9e4f337a80d273a06e6bf7fc4ee1f0"
+    }
+  ],
+  "network": {
+    "chainId": 1,
+    "name": "Ethereum",
+    "testnet": false,
+    "rpcUrls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://eth.drpc.org"
+    ],
+    "explorer": "https://etherscan.io",
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "faucets": [],
+    "uniswapV4": {
+      "poolManager": "0x000000000004444c5dc75cb358380d2e3de08a90",
+      "universalRouter": "0x66a9893cc07d91d95644aedd05d03f95e1dba8af",
+      "quoter": "0x52f0e24d1c21c8a0cb1e5a5dd6198556bd9e1203",
+      "stateView": "0x7ffe42c4a5deea5b0fec41c94c136cf115597227",
+      "positionManager": "0xbd216513d74c8cf14cf4747e6aaa6420ff64ee9e",
+      "permit2": "0x000000000022d473030f116ddee9f6b43ac78ba3"
+    },
+    "pairToken": {
+      "address": "0xd34a99bc0f67ae1bbd63c660e6d0b0dd03e263b7",
+      "symbol": "IMD",
+      "name": "Identity.md",
+      "decimals": 18
+    },
+    "otherPairTokens": [
+      {
+        "id": "fwa",
+        "address": "0xa0df17b5ac76ababa36e1450e2cbcd18a620c845",
+        "symbol": "FWA",
+        "name": "Fake World Assets",
+        "decimals": 18
+      },
+      {
+        "id": "imdusd",
+        "address": "0x61aaf8a992a3143e2b0c9cb0030b9fe702854a25",
+        "symbol": "imdUSD",
+        "name": "imdUSD",
+        "decimals": 18
+      }
+    ]
+  },
+  "walletAddChain": {
+    "chainId": "0x1",
+    "chainName": "Ethereum",
+    "rpcUrls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://eth.drpc.org"
+    ],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "blockExplorerUrls": [
+      "https://etherscan.io"
+    ]
+  }
+}
